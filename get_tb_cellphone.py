@@ -60,5 +60,3 @@ def get_tb_cellphone():
                 v_tag2 = sub_data[len(sub_data)-1]
         currentPage += 1
 
-
-get_tb_cellphone()
