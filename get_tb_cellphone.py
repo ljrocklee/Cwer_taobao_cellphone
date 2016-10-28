@@ -71,9 +71,9 @@ def get_tb_cellphone():
                     v_tag2 = sub_data[len(sub_data)-1]
                     page_valueset.append((v_title,v_price,v_src_size,v_month_sales,v_tag1,v_tag2))
             print(page_valueset)
-            #tb_cur.executemany(str_sql,page_valueset)
-            #conn.commit()
-            #tb_cur.close()
+            tb_cur.executemany(str_sql,page_valueset)
+            conn.commit()
+            tb_cur.close()
             currentPage += 1
     except Exception as e:
         print(e)
