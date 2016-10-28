@@ -19,7 +19,7 @@ def get_tb_cellphone():
                 }
     str_sql = 'insert into T_taobao_cellphone(cp_name ,cp_price ,cp_src_size ,cp_month_sales ,cp_tag1 ,cp_tag2)' \
               ' values(%s,%s,%s,%s,%s,%s)'
-    conn = pymysql.connect(host = 'localhost', db = 'jack_data', user = 'jack', password = 'jack',charset = 'utf8')
+    conn = pymysql.connect(host = 'localhost', db = '--', user = '--', password = '--',charset = 'utf8')
     try:
 
         tb_cur = conn.cursor();
