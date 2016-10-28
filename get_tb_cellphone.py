@@ -17,11 +17,11 @@ def get_tb_cellphone():
                     'Host': 'www.douban.com',
                     'DNT': '1'
                 }
-    str_sql = 'insert into T_taobao_cellphone(,cp_name ,cp_price ,cp_src_size ,cp_month_sales ,cp_tag1 ,cp_tag2)' \
+    str_sql = 'insert into T_taobao_cellphone(cp_name ,cp_price ,cp_src_size ,cp_month_sales ,cp_tag1 ,cp_tag2)' \
               ' values(%s,%s,%s,%s,%s,%s)'
-
+    conn = pymysql.connect(host = 'localhost', db = 'jack_data', user = 'jack', password = 'jack',charset = 'utf8')
     try:
-        conn = pymysql.connect(host = 'localhost', db = 'any_xml', user = 'jack', password = 'jack',charset = 'utf8mb4')
+
         tb_cur = conn.cursor();
         webPage_total=urllib.request.urlopen(weburl%(cat_name,0))
         total_message = webPage_total.read().decode("utf8")
@@ -35,6 +35,7 @@ def get_tb_cellphone():
         totalCount = page_message[3].split(':')[1]
         print(totalPage)
         while currentPage <= totalPage:
+            tb_cur = conn.cursor();
             v_title = '';
             v_price = 0;
             v_src_size = '';
@@ -48,11 +49,12 @@ def get_tb_cellphone():
             page_data = str(BeautifulSoup(data,"html.parser"))                       # 通过BF将网页进行转换
             p_all_detail= re.compile(r'(.*)(\"spus\"\:)(.*)(\,\"spucombo\"\:\{\"status\"\:\"hide\"\})(.*)',re.DOTALL)
             m_all_detail = p_all_detail.match(page_data)
-            page_data = str(m_all_detail.group(3)).replace('\"','').replace('[','').replace('{','').replace(']','').replace('}','').split(',')
+            page_data = str(m_all_detail.group(3)).replace('\"','').replace('[','').replace('{','').replace(']','').replace('}','').replace('\\','').split(',')
             print(page_size, totalPage ,currentPage,totalCount)
             #while currentPage < int(totalPage):
             for i in range(len(page_data)):
                 sub_data = page_data[i].split(':')
+                print(sub_data)
                 if sub_data[0] == 'title':
                     print("--------------------------------------------------------------")
                     print(v_title,v_price,v_src_size,v_month_sales,v_tag1,v_tag2)
@@ -68,10 +70,10 @@ def get_tb_cellphone():
                 elif sub_data[0] == 'tag':
                     v_tag2 = sub_data[len(sub_data)-1]
                     page_valueset.append((v_title,v_price,v_src_size,v_month_sales,v_tag1,v_tag2))
-            print(currentPage)
-            tb_cur.executemany(str_sql,page_valueset)
-            conn.commit()
-            tb_cur.close()
+            print(page_valueset)
+            #tb_cur.executemany(str_sql,page_valueset)
+            #conn.commit()
+            #tb_cur.close()
             currentPage += 1
     except Exception as e:
         print(e)
